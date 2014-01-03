@@ -9,22 +9,21 @@ namespace JDataStructure.Problems
     public class Sudoku
     {
         int SIZE = 9;
-
-        //dictionary store all the possible moves
-        Dictionary<int, List<int>> _dict = new Dictionary<int, List<int>>();
-        List<int> _defaultList = new List<int>();
-
         public Sudoku()
         {
+        }
+
+        public int[,] Solve(int[,] grid)
+        {
+            //dictionary store all the possible moves
+            Dictionary<int, List<int>> _dict = new Dictionary<int, List<int>>();
+            List<int> _defaultList = new List<int>();
+
             //init _dict
             for (int i = 1; i <= SIZE * SIZE; i++)
             {
                 _dict.Add(i, null);
             }
-        }
-
-        public int[,] Solve(int[,] grid)
-        {
             //init _defaultList to ignore default position
             for (int i = 0; i < SIZE; i++)
                 for (int j = 0; j < SIZE; j++)
@@ -32,6 +31,9 @@ namespace JDataStructure.Problems
                         _defaultList.Add(GetId(i, j));     
 
             int id = 1;
+            while (_defaultList.Contains(id))
+                id++;
+
             while (id <= 81)
             {
                 int[] pos = GetPos(id);
@@ -51,12 +53,14 @@ namespace JDataStructure.Problems
                     _dict[id] = null;
 
                     id--;
-                    if (_defaultList.Contains(id))
+                    while (_defaultList.Contains(id))
                         id--;
 
                     int[] prevPos = GetPos(id);
                     int invalidNu = grid[prevPos[0], prevPos[1]];
-                    _dict[id].Remove(invalidNu);
+
+                    if (_dict[id].Contains(invalidNu))
+                        _dict[id].Remove(invalidNu);
                     grid[row, col] = 0;
                 }
                 else
@@ -67,9 +71,11 @@ namespace JDataStructure.Problems
                     grid[row, col] = pList[0];
                     id++;
 
-                    if (_defaultList.Contains(id))
+                    while (_defaultList.Contains(id))
                         id++;
                 }
+
+                //founnd a solution
             }
 
             Show(grid);
