@@ -30,12 +30,20 @@ namespace JDataStructure.Problems
                     if (grid[i, j] > 0)
                         _defaultList.Add(GetId(i, j));     
 
-            int id = 1;
-            while (_defaultList.Contains(id))
-                id++;
+            //analyze priority squares
+            List<int> pSquare = GetPriorityIDs(grid);
 
-            while (id <= 81)
+            int idx = 0;
+            int id = pSquare[idx];
+            
+            while (_defaultList.Contains(id))
+                idx++;
+            long times = 0;
+            while (idx < 81)
             {
+                times++;
+                id = pSquare[idx];
+
                 int[] pos = GetPos(id);
                 int row = pos[0]; 
                 int col = pos[1];
@@ -52,9 +60,10 @@ namespace JDataStructure.Problems
                     //Console.ReadLine();
                     _dict[id] = null;
 
-                    id--;
-                    while (_defaultList.Contains(id))
-                        id--;
+                    idx--;
+                    while (_defaultList.Contains(pSquare[idx]))
+                        idx--;
+                    id = pSquare[idx];
 
                     int[] prevPos = GetPos(id);
                     int invalidNu = grid[prevPos[0], prevPos[1]];
@@ -68,17 +77,26 @@ namespace JDataStructure.Problems
                     //Console.WriteLine("id={0} - row {1} col {2}", id, row, col);
                     //Show(grid);
                     //Console.ReadLine();
-                    grid[row, col] = pList[0];
-                    id++;
+                    //assize random number:
+                    Random rand = new Random();
+                    grid[row, col] = pList[rand.Next(0, pList.Count)];
+                    //grid[row, col] = pList[0];
+                    idx++;
 
-                    while (_defaultList.Contains(id))
-                        id++;
+                    if (idx < pSquare.Count)
+                    {
+                        while (_defaultList.Contains(pSquare[idx]))
+                        {
+                            idx++;
+                            if (idx >= pSquare.Count)
+                                break;
+                        }
+                    }
                 }
-
-                //founnd a solution
             }
 
             Show(grid);
+            Console.WriteLine("times:{0}", times);
             return grid;
         }
 
@@ -96,6 +114,46 @@ namespace JDataStructure.Problems
         private int GetId(int row, int col)
         {
             return SIZE * row + col + 1;
+        }
+
+        private List<int> GetPriorityIDs(int[,] grid)
+        {
+            List<int> result = new List<int>();
+
+            //dictionary stores square id and no of possible case
+            Dictionary<int, int> iDict = new Dictionary<int, int>();
+            for (int id = 1; id <= 81; id++)
+            {
+                int[] pos = GetPos(id);
+                int tr = pos[0];
+                int tc = pos[1];
+
+                List<int> tmp = GetPossibleNumbers(grid, tr, tc);
+                iDict.Add(id, tmp.Count);
+                result.Add(id);
+            }
+
+            //sort bubble will do
+            for (int i = 0; i < result.Count - 1; i++)
+            {
+                for (int j = 0; j < result.Count - 1 - i; j++)
+                {
+                    int k = result[j];
+                    int k1 = result[j + 1];
+                    if (iDict[k] > iDict[k1])
+                    {
+                        int tmp = result[j];
+                        result[j] = result[j + 1];
+                        result[j + 1] = tmp;
+                    }
+                }
+            }
+
+            foreach (int tmp in result)
+            {
+                Console.WriteLine("id:{0} cnt:{1}", tmp, iDict[tmp]);
+            }
+            return result;
         }
 
         private List<int> GetPossibleNumbers(int[,] grid, int row, int col)
@@ -120,7 +178,44 @@ namespace JDataStructure.Problems
                 }
             }
 
+            int id = GetId(row, col);
+            List<int> zones = GetZones(id);
+            foreach (int i in zones)
+            {
+                if (i == id) continue;
+
+                int[] pos = GetPos(i);
+                int tmp = grid[pos[0], pos[1]];
+
+                if (tmp > 0)
+                {
+                    if (ls.Contains(tmp))
+                        ls.Remove(tmp);
+                }
+            }
+
+
             return ls;
+        }
+
+        private List<int> GetZones(int id)
+        {
+            List<int> result = new List<int>();
+
+            int[] pos = GetPos(id);
+            int row = pos[0] % 3;
+            int col = pos[1] % 3;
+
+            int rootId = id - col - 9 * row;
+
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    result.Add(rootId + j + 9 * i);
+                }
+            }
+            return result;
         }
 
         private List<int> GetL()
