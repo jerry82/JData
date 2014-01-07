@@ -74,8 +74,8 @@ namespace JDataStructure.Problems
                 }
             }
 
-            //Show(grid);
-            //Console.WriteLine("try:{0} times", times);
+            Show(grid);
+            Console.WriteLine("try:{0} times", times);
             return grid;
         }
 
