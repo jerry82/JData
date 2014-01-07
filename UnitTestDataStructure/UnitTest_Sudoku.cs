@@ -15,12 +15,15 @@ namespace UnitTestDataStructure
         string _inputfile = @"text/sudoku.data";
         int[,] _grid = new int[9, 9];
         int SIZE = 9;
+        Sudoku sk;
 
         [TestInitialize]
         public void InitGrid()
         {
+            sk = new Sudoku();
             string tmp = String.Empty;
             int row = 0;
+
             using (StreamReader sr = new StreamReader(_inputfile, System.Text.Encoding.ASCII))
             {
                 while ((tmp = sr.ReadLine()) != null)
@@ -38,40 +41,8 @@ namespace UnitTestDataStructure
         [TestMethod]
         public void TestSudoku()
         {
-            Sudoku sk = new Sudoku();
             int[,] result = sk.Solve(_grid);
-            Assert.AreEqual(true, CheckResult(result));
-        }
-
-        private bool CheckResult(int[,] result)
-        {
-            //check horizontal
-            for (int row = 0; row < SIZE; row++)
-            {
-                List<int> tmp = GetList();
-                for (int col = 0; col < SIZE; col++)
-                {
-                    if (tmp.Contains(result[row, col]))
-                        tmp.Remove(result[row, col]);
-                    else
-                        return false;
-                }
-            }
-
-            //check vertical 
-            for (int col = 0; col < SIZE; col++)
-            {
-                List<int> tmp = GetList();
-                for (int row = 0; row < SIZE; row++)
-                {
-                    if (tmp.Contains(result[row, col]))
-                        tmp.Remove(result[row, col]);
-                    else
-                        return false;
-                }
-            }
-
-            return true; ;
+            Assert.AreEqual(true, sk.IsValid(result));
         }
 
         private List<int> GetList()

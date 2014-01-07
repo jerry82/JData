@@ -9,21 +9,24 @@ namespace JDataStructure.Problems
     public class Sudoku
     {
         int SIZE = 9;
-        public Sudoku()
-        {
-        }
+        public Sudoku(){ } 
 
         public int[,] Solve(int[,] grid)
         {
+            if (!IsValid(grid))
+            {
+                Console.WriteLine("invalid input");
+                return null;
+            }
+
             //dictionary store all the possible moves
             Dictionary<int, List<int>> _dict = new Dictionary<int, List<int>>();
             List<int> _defaultList = new List<int>();
 
             //init _dict
             for (int i = 1; i <= SIZE * SIZE; i++)
-            {
                 _dict.Add(i, null);
-            }
+
             //init _defaultList to ignore default position
             for (int i = 0; i < SIZE; i++)
                 for (int j = 0; j < SIZE; j++)
@@ -55,9 +58,6 @@ namespace JDataStructure.Problems
                 //backtrack
                 if (pList.Count == 0)
                 {
-                    //Console.WriteLine("id={0} - row {1} col {2}", id, row, col);
-                    //Show(grid);
-                    //Console.ReadLine();
                     _dict[id] = null;
 
                     idx--;
@@ -74,13 +74,8 @@ namespace JDataStructure.Problems
                 }
                 else
                 {
-                    //Console.WriteLine("id={0} - row {1} col {2}", id, row, col);
-                    //Show(grid);
-                    //Console.ReadLine();
-                    //assize random number:
                     Random rand = new Random();
                     grid[row, col] = pList[rand.Next(0, pList.Count)];
-                    //grid[row, col] = pList[0];
                     idx++;
 
                     if (idx < pSquare.Count)
@@ -96,7 +91,7 @@ namespace JDataStructure.Problems
             }
 
             Show(grid);
-            Console.WriteLine("times:{0}", times);
+            Console.WriteLine("try:{0} times", times);
             return grid;
         }
 
@@ -149,33 +144,23 @@ namespace JDataStructure.Problems
                 }
             }
 
-            foreach (int tmp in result)
-            {
-                Console.WriteLine("id:{0} cnt:{1}", tmp, iDict[tmp]);
-            }
             return result;
         }
 
         private List<int> GetPossibleNumbers(int[,] grid, int row, int col)
         {
-            List<int> ls = GetL();
+            List<int> ls = Get1To9();
 
             for (int i = 0; i < SIZE; i++)
             {
-                if (i != col)
-                {
-                    if (ls.Contains(grid[row, i]))
-                        ls.Remove(grid[row, i]);
-                }       
+                if (i != col && ls.Contains(grid[row, i])) 
+                    ls.Remove(grid[row, i]);
             }
 
             for (int j = 0; j < SIZE; j++)
             {
-                if (j != row)
-                {
-                    if (ls.Contains(grid[j, col]))
+                if (j != row && ls.Contains(grid[j, col]))
                         ls.Remove(grid[j, col]);
-                }
             }
 
             int id = GetId(row, col);
@@ -187,13 +172,9 @@ namespace JDataStructure.Problems
                 int[] pos = GetPos(i);
                 int tmp = grid[pos[0], pos[1]];
 
-                if (tmp > 0)
-                {
-                    if (ls.Contains(tmp))
-                        ls.Remove(tmp);
-                }
+                if (tmp > 0 && ls.Contains(tmp))
+                    ls.Remove(tmp);
             }
-
 
             return ls;
         }
@@ -209,16 +190,13 @@ namespace JDataStructure.Problems
             int rootId = id - col - 9 * row;
 
             for (int i = 0; i < 3; i++)
-            {
                 for (int j = 0; j < 3; j++)
-                {
                     result.Add(rootId + j + 9 * i);
-                }
-            }
+
             return result;
         }
 
-        private List<int> GetL()
+        private List<int> Get1To9()
         {
             List<int> result = new List<int>();
             for (int i = 1; i <= SIZE; i++)
@@ -226,12 +204,77 @@ namespace JDataStructure.Problems
             return result;
         }
 
+        public bool IsValid(int[,] grid)
+        {
+            bool result = true;
+            List<int> checkL = new List<int>();
+
+            //check rows
+            for (int row = 0; row < SIZE; row++)
+            {
+                checkL = Get1To9();
+                for (int col = 0; col < SIZE; col++)
+                {
+                    int tmp = grid[row, col];
+                    if (tmp > 0)
+                    {
+                        if (checkL.Contains(tmp))
+                        {
+                            checkL.Remove(tmp);
+                        }
+                        else 
+                            return false;
+                    }
+                }
+            }
+
+            //check cols
+            for (int col = 0; col < SIZE; col++)
+            {
+                checkL = Get1To9();
+                for (int row = 0; row < SIZE; row++)
+                {
+                    int tmp = grid[row, col];
+                    if (tmp > 0)
+                    {
+                        if (checkL.Contains(tmp))
+                        {
+                            checkL.Remove(tmp);
+                        }
+                        else
+                            return false;
+                    }
+                }
+            }
+
+            //check 9 zones
+            List<int> ids = new List<int>() { 1, 4, 7, 28, 31, 34, 55, 58, 61 };
+            foreach (int id in ids)
+            {
+                List<int> zone = GetZones(id);
+                checkL = Get1To9();
+
+                foreach (int zoneId in zone)
+                {
+                    int[] pos = GetPos(zoneId);
+                    int tmp = grid[pos[0], pos[1]];
+                    if (tmp > 0)
+                    {
+                        if (checkL.Contains(tmp))
+                            checkL.Remove(tmp);
+                        else
+                            return false;
+                    }
+                }
+            }
+
+            return result;
+        }
+
         private void ShowList(List<int> ls)
         {
             foreach (int i in ls)
-            {
                 Console.Write("{0} ", i);
-            }
             Console.WriteLine();
         }
 
@@ -240,9 +283,7 @@ namespace JDataStructure.Problems
             for (int i = 0; i < SIZE; i++)
             {
                 for (int j = 0; j < SIZE; j++)
-                {
                     Console.Write("{0} ", grid[i, j]);
-                }
                 Console.WriteLine();
             }
             Console.WriteLine();
