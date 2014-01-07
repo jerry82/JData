@@ -21,7 +21,7 @@ namespace JDataStructure.Problems
 
             //dictionary store all the possible moves
             Dictionary<int, List<int>> _dict = new Dictionary<int, List<int>>();
-            List<int> _defaultList = new List<int>();
+            List<int> defaultList = new List<int>();
 
             //init _dict
             for (int i = 1; i <= SIZE * SIZE; i++)
@@ -31,18 +31,16 @@ namespace JDataStructure.Problems
             for (int i = 0; i < SIZE; i++)
                 for (int j = 0; j < SIZE; j++)
                     if (grid[i, j] > 0)
-                        _defaultList.Add(GetId(i, j));     
+                        defaultList.Add(GetId(i, j));     
 
-            //analyze priority squares
-            List<int> pSquare = GetPriorityIDs(grid);
+            //analyze priority squares - they have less possible 
+            //values to try
+            List<int> pSquare = GetPriorityIDs(grid, defaultList);
 
-            int idx = 0;
-            int id = pSquare[idx];
-            
-            while (_defaultList.Contains(id))
-                idx++;
+            int id, idx = 0;
             long times = 0;
-            while (idx < 81)
+
+            while (idx < pSquare.Count)
             {
                 times++;
                 id = pSquare[idx];
@@ -58,47 +56,32 @@ namespace JDataStructure.Problems
                 //backtrack
                 if (pList.Count == 0)
                 {
+                    grid[row, col] = 0;
                     _dict[id] = null;
-
                     idx--;
-                    while (_defaultList.Contains(pSquare[idx]))
-                        idx--;
-                    id = pSquare[idx];
 
-                    int[] prevPos = GetPos(id);
+                    int prevId = pSquare[idx];
+                    int[] prevPos = GetPos(prevId);
                     int invalidNu = grid[prevPos[0], prevPos[1]];
 
-                    if (_dict[id].Contains(invalidNu))
-                        _dict[id].Remove(invalidNu);
-                    grid[row, col] = 0;
+                    if (_dict[prevId].Contains(invalidNu))
+                        _dict[prevId].Remove(invalidNu);
                 }
                 else
                 {
-                    Random rand = new Random();
-                    grid[row, col] = pList[rand.Next(0, pList.Count)];
+                    grid[row, col] = pList[(new Random()).Next(0, pList.Count)];
                     idx++;
-
-                    if (idx < pSquare.Count)
-                    {
-                        while (_defaultList.Contains(pSquare[idx]))
-                        {
-                            idx++;
-                            if (idx >= pSquare.Count)
-                                break;
-                        }
-                    }
                 }
             }
 
-            Show(grid);
-            Console.WriteLine("try:{0} times", times);
+            //Show(grid);
+            //Console.WriteLine("try:{0} times", times);
             return grid;
         }
 
         private int[] GetPos(int id)
         {
             int row = (int)(id / SIZE);
-
             if (id == row * SIZE)
                 row--;
 
@@ -111,7 +94,7 @@ namespace JDataStructure.Problems
             return SIZE * row + col + 1;
         }
 
-        private List<int> GetPriorityIDs(int[,] grid)
+        private List<int> GetPriorityIDs(int[,] grid, List<int> defaultL)
         {
             List<int> result = new List<int>();
 
@@ -119,6 +102,8 @@ namespace JDataStructure.Problems
             Dictionary<int, int> iDict = new Dictionary<int, int>();
             for (int id = 1; id <= 81; id++)
             {
+                if (defaultL.Contains(id)) continue;
+
                 int[] pos = GetPos(id);
                 int tr = pos[0];
                 int tc = pos[1];
@@ -286,7 +271,6 @@ namespace JDataStructure.Problems
                     Console.Write("{0} ", grid[i, j]);
                 Console.WriteLine();
             }
-            Console.WriteLine();
         }
     }
 }
