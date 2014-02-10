@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Heap\JBinaryHeap.cs" />
     <Compile Include="Problems\Sudoku.cs" />
     <Compile Include="Sort\Sorter.cs" />
     <Compile Include="Trie\IJTrie.cs" />
@@ -56,6 +57,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Problems\Sudoku.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Graph\" />
+    <Folder Include="Tree\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

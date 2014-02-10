@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using JDataStructure.Heap;
+
 namespace JDataStructure.Sort
 {
     public abstract class Sorter
@@ -176,4 +178,34 @@ namespace JDataStructure.Sort
         }
     }
     #endregion  
+
+    #region heap sort
+    /// <summary>
+    /// Heap sort use Heap datastructure
+    /// </summary>
+    public class HeapSort : Sorter
+    {
+        public override void Ascend(List<int> arr)
+        {
+            List<int> tmpArr = Sort(arr);
+
+            arr.Clear();
+
+            for (int i = tmpArr.Count - 1; i >= 0; i--)
+            {
+                arr.Add(tmpArr[i]);    
+            }
+        }
+
+        private List<int> Sort(List<int> arr)
+        {
+            List<int> list = new List<int>();
+
+            JBinaryHeap bh = new JBinaryHeap();
+            list = bh.HeapSort(arr);
+
+            return list;
+        }
+    }
+    #endregion
 }

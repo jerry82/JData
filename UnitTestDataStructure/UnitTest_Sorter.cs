@@ -47,5 +47,16 @@ namespace UnitTestDataStructure
             sorter.Ascend(arr);
             CollectionAssert.AreEqual(sortedArr, arr);
         }
+
+        [TestMethod]
+        public void TestHeapSort()
+        {
+            HeapSort sorter = new HeapSort();
+            List<int> arr = new List<int>() { 5, 5, 3, 2, 7, 1 };
+            List<int> sortedArr = new List<int>() { 1, 2, 3, 5, 5, 7 };
+            sorter.Ascend(arr);
+
+            CollectionAssert.AreEqual(sortedArr, arr);
+        }
     }
 }

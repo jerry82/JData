@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace JDataStructure
 {
+    ///<summary>
     /// This class implements a Trie datastructure to store words
     /// The Trie has JNodes and each node store its children nodes in a dictionary for fast retrieval
     /// Dictionary key is in ASCII Character type so there will be a limit of 26 items in the dictionary
+    /// </summary>
     /// 
     public class JTrie : IJTrie
     {
