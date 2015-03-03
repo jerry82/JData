@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{9FCA3A68-E3BF-488F-AA5B-9B199808BFC7}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>JDataStructure</RootNamespace>
     <AssemblyName>JDataStructure</AssemblyName>
@@ -29,6 +29,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -39,9 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Heap\JBinaryHeap.cs" />
+    <Compile Include="Problems\StringChecker.cs" />
     <Compile Include="Problems\Sudoku.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Sort\Sorter.cs" />
+    <Compile Include="Hashtable\TheHash.cs" />
     <Compile Include="Trie\IJTrie.cs" />
     <Compile Include="Trie\JTrie.cs" />
     <Compile Include="Trie\JTrieNode.cs" />
@@ -57,10 +62,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Problems\Sudoku.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Graph\" />
-    <Folder Include="Tree\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
