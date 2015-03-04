@@ -48,57 +48,6 @@ namespace JDataStructure.Sort {
     /// worst -> already sort array, partition index just move 1 unit left the hi end.
     /// 
     /// </summary>
-    public class QuickSort : Sorter {
-        public override void Ascend(List<int> arr) {
-            Sort(arr, 0, arr.Count - 1);
-        }
-
-        private void Sort(List<int> arr, int start, int end) {
-            int k = Partition(arr, start, end);
-            if (k != -1) {
-                Sort(arr, start, k - 1);
-                Sort(arr, k, end);
-            }
-        }
-
-        private int Partition(List<int> arr, int start, int end) {
-            int L = start;
-            int R = end;
-
-            int piv = GetPivot(arr, start, end);
-            if (piv == -1)
-                return -1;
-
-            while (L < R) {
-                while (arr[L] < piv) L++;
-                while (arr[R] >= piv) R--;
-
-                if (L < R) {
-                    int tmp = arr[L];
-                    arr[L] = arr[R];
-                    arr[R] = tmp;
-                }
-            }
-
-            return L;
-        }
-
-        private int GetPivot(List<int> arr, int start, int end) {
-            if (start >= end)
-                return -1;
-
-            if (end - start == 1) {
-                if (arr[end] == arr[start])
-                    return -1;
-                else
-                    return (arr[start] > arr[end]) ? arr[start] : arr[end];
-            }
-
-            int mid = (int)((start + end) / 2);
-            return (int)((arr[start] + arr[mid] + arr[end]) / 3);
-        }
-    }
-
     public class QSort : Sorter {
 
         public override void Ascend(List<int> A) {

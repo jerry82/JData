@@ -46,7 +46,7 @@
     <Compile Include="Problems\Sudoku.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Sort\Sorter.cs" />
-    <Compile Include="Hashtable\TheHash.cs" />
+    <Compile Include="Hashtable\JHash.cs" />
     <Compile Include="Trie\IJTrie.cs" />
     <Compile Include="Trie\JTrie.cs" />
     <Compile Include="Trie\JTrieNode.cs" />

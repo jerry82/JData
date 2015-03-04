@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace JDataStructure {
 
-    //check is the string is Number
+    //check is the string is a Number
     public class StringChecker {
         
         private const char DOT_CHAR = '.';
