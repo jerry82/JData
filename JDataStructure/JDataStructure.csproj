@@ -42,11 +42,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="crackcode\Chap41.cs" />
+    <Compile Include="crackcode\Chap42.cs" />
+    <Compile Include="crackcode\DataFeeder.cs" />
+    <Compile Include="Problems\QArray.cs" />
     <Compile Include="Problems\StringChecker.cs" />
     <Compile Include="Problems\Sudoku.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Sort\Sorter.cs" />
     <Compile Include="Hashtable\JHash.cs" />
+    <Compile Include="TreeGraphDS\BTree.cs" />
+    <Compile Include="TreeGraphDS\Graph.cs" />
+    <Compile Include="TreeGraphDS\Tree.cs" />
     <Compile Include="Trie\IJTrie.cs" />
     <Compile Include="Trie\JTrie.cs" />
     <Compile Include="Trie\JTrieNode.cs" />
@@ -63,6 +70,7 @@
   <ItemGroup>
     <Content Include="Problems\Sudoku.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

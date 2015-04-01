@@ -7,19 +7,7 @@ using System.Threading.Tasks;
 namespace JDataStructure.Sort {
     
     public abstract class Sorter {
-
-        public abstract void Ascend(List<int> arr);
-
-        public virtual void Descend(List<int> arr) {
-            int mid = (int)(arr.Count / 2);
-            for (int i = 0; i < mid; i++) {
-                int tmp = arr[i];
-                arr[i] = arr[arr.Count - 1 - i];
-                arr[arr.Count - 1 - i] = tmp;
-            }
-        }
-
-        protected void PrintArr(List<int> A) {
+        public void PrintArr(int[] A) {
             foreach (int i in A) {
                 Console.Write("  {0}  ", i);
             }
@@ -48,13 +36,13 @@ namespace JDataStructure.Sort {
     /// worst -> already sort array, partition index just move 1 unit left the hi end.
     /// 
     /// </summary>
-    public class QSort : Sorter {
+    public class QuickSort : Sorter {
 
-        public override void Ascend(List<int> A) {
-            Sort(A, 0, A.Count - 1);
+        public void Sort(int[] A) {
+            Sort(A, 0, A.Length - 1);
         }
 
-        private void Sort(List<int> A, int lo, int hi) {
+        private void Sort(int[] A, int lo, int hi) {
             if (lo >= hi)
                 return;
 
@@ -76,7 +64,7 @@ namespace JDataStructure.Sort {
             Sort(A, idx + 1, hi);
         }
 
-        private int Partition(List<int> A, int lo, int hi) {
+        private int Partition(int[]A, int lo, int hi) {
             int pivot = A[hi];
             int pIdx = lo;
 
@@ -102,55 +90,68 @@ namespace JDataStructure.Sort {
 
     #region merge sort
     /// <summary>
+    /// get the mid idx and partition the array to left and right
+    /// merge left and right (left and right are already sorted array
     /// best | average | worst 
     /// nlogn | nlogn | nlogn
     /// </summary>
-    public class MergeSort : Sorter {
-        public override void Ascend(List<int> arr) {
-            List<int> result = DoMerge(arr, 0, arr.Count - 1);
-            for (int i = 0; i < result.Count; i++) {
-                arr[i] = result[i];
+    /// 
+    public class MergeSort : Sorter{
+
+        public void Sort(int[] A) {
+            int[] result = Sort(A, 0, A.Length - 1);
+            Array.Copy(result, A, A.Length);
+        } 
+
+        private int[] Sort(int[] A, int lo, int hi) {
+
+            List<int> tmpList = new List<int>();
+            if (lo == hi) {
+                tmpList.Add(A[lo]);
+                return tmpList.ToArray();
             }
+
+            if (lo == hi - 1) {
+                if (A[lo] > A[hi]) {
+                    int tmp = A[lo];
+                    A[lo] = A[hi];
+                    A[hi] = tmp;
+                }
+                tmpList.Add(A[lo]);
+                tmpList.Add(A[hi]);
+
+                return tmpList.ToArray();
+            }
+
+            int mid = lo + (hi - lo) / 2;
+
+            int[] left = Sort(A, lo, mid - 1);
+            int[] right = Sort(A, mid, hi);
+
+            int[] merge = Merge(left, right);
+            return merge;
         }
 
-        private List<int> DoMerge(List<int> l, int start, int end) {
-            List<int> result = new List<int>();
-            if (start == end) {
-                result.Add(l[start]);
-                return result;
+        public int[] Merge(int[] a, int[] b) {
+            int[] c = new int[a.Length + b.Length];
+            int iA = 0, iB = 0, iC = 0;
+
+            while (iA < a.Length && iB < b.Length) {
+                if (a[iA] < b[iB]) 
+                    c[iC++] = a[iA++];
+                else 
+                    c[iC++] = b[iB++];
             }
 
-            int mid = (int)((start + end) / 2);
-            List<int> left = DoMerge(l, start, mid);
-            List<int> right = DoMerge(l, mid + 1, end);
+            while (iA >= a.Length && iB < b.Length) 
+                c[iC++] = b[iB++];
 
-            result = Merge(left, right);
-            return result;
-        }
-
-        private List<int> Merge(List<int> a, List<int> b) {
-            List<int> result = new List<int>();
-
-            int iA = 0;
-            int iB = 0;
-
-            while (result.Count < a.Count + b.Count) {
-                if (iA >= a.Count && iB < b.Count) {
-                    result.Add(b[iB++]);
-                }
-                else if (iB >= b.Count && iA < a.Count) {
-                    result.Add(a[iA++]);
-                }
-                else {
-                    if (a[iA] < b[iB])
-                        result.Add(a[iA++]);
-                    else
-                        result.Add(b[iB++]);
-                }
-            }
-
-            return result;
+            while (iA < a.Length && iB >= b.Length) 
+                c[iC++] = a[iA++];
+            
+            return c;
         }
     }
+
     #endregion
 }

@@ -5,15 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace JDataStructure {
-
-    //check is the string is a Number
     public class StringChecker {
-        
         private const char DOT_CHAR = '.';
         private const char NEG_CHAR = '-';
            
+        /*
+         * Check whether a string is number
+         * */
         public bool IsNum(String input) {
-
             int cntDot = 0;
 
             for (int i = 0; i < input.Length; i++) {
@@ -22,7 +21,6 @@ namespace JDataStructure {
                 //'-' is only at the begin
                 if (c == '-' && i != 0)
                     return false;
-
                 //no 2 dots
                 //before dot is num
                 if (c == DOT_CHAR) {
@@ -33,7 +31,6 @@ namespace JDataStructure {
                             return false;
                         }
                     }
-
                     //dot at the end
                     if (i == input.Length - 1)
                         return false;
@@ -51,6 +48,16 @@ namespace JDataStructure {
 
         private bool IsNumChar(char c) {
             return ((int)c <= 57 && (int)c >= 48) || c == DOT_CHAR || c== NEG_CHAR;
+        }
+
+        /*
+         * Check whether a string is "palindrome"
+         * dynamic programming
+         * */
+        public bool IsPalindrom(String input) {
+            bool result = false;
+
+            return result;
         }
 
         public void Test() {
